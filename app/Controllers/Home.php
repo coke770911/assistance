@@ -5,11 +5,7 @@ use App\Libraries\Ecpay;
 
 class Home extends BaseController {
 
-
-    private $HashKey = '5294y06JbISpM5x9';
-    private $HashIV = 'v77hoKGq4kWxNNIS';
-    private $EncryptType = '1';
-    
+ 
     public function index()
     {   
         $city_data = model('App\Models\RefData', true);
@@ -80,7 +76,7 @@ class Home extends BaseController {
         );
         $TransactionList = model('App\Models\TransactionList', true);
         $TransactionList->setValue($data);
-        $TransactionList->update_table();
+        //$TransactionList->update_table();
         $this->cashflow($p_id,$money,$OrderDate);
     }
 
@@ -92,10 +88,10 @@ class Home extends BaseController {
             $obj = new ECPay();
             #商店參數
             $obj->ServiceURL  = "https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5";   //服務位置
-            $obj->HashKey     = $this->HashKey ;                                               //測試用Hashkey，請自行帶入ECPay提供的HashKey
-            $obj->HashIV      = $this->HashIV ;                                                //測試用HashIV，請自行帶入ECPay提供的HashIV
-            $obj->MerchantID  = '2000214' ;                                                    //測試用MerchantID，請自行帶入ECPay提供的MerchantID
-            $obj->EncryptType = $this->EncryptType ;                                           //CheckMacValue加密類型，請固定填入1，使用SHA256加密
+            $obj->HashKey     = $_ENV["HashKey"] ;                                               //測試用Hashkey，請自行帶入ECPay提供的HashKey
+            $obj->HashIV      = $_ENV["HashIV"] ;                                                //測試用HashIV，請自行帶入ECPay提供的HashIV
+            $obj->MerchantID  = $_ENV["MerchantID"] ;                                                    //測試用MerchantID，請自行帶入ECPay提供的MerchantID
+            $obj->EncryptType = $_ENV["EncryptType"] ;                                           //CheckMacValue加密類型，請固定填入1，使用SHA256加密
 
             #基本參數(請依系統規劃自行調整)
             $obj->Send['ReturnURL']         = "https://donate.oit.edu.tw/Home/cashflowresult" ; //付款完成通知回傳的網址
@@ -136,7 +132,7 @@ class Home extends BaseController {
             */
 
             $obj->CheckOut(); //產生訂單(auto submit至ECPay)
-    
+            
         } catch (Exception $e) {
             echo $e->getMessage();
         } 
@@ -148,7 +144,7 @@ class Home extends BaseController {
      */
     public function cashflowresult() {
         $obj = new ECPay();
-        $returnCheckMacValue = \ECPay_CheckMacValue::generate($_POST,$this->HashKey,$this->HashIV,$this->EncryptType);
+        $returnCheckMacValue = \ECPay_CheckMacValue::generate($_POST,$_ENV["HashKey"],$_ENV["HashKey"],$_ENV["EncryptType"]);
         $checkValue = $returnCheckMacValue;
 
         $data = array(

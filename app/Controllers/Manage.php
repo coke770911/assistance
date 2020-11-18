@@ -13,14 +13,12 @@ class Manage extends BaseController {
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setCellValue('A1', '這是第一格');
 
-        
         $report_fileName = date("Ymd")."對帳捐款資料.xlsx";
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename='.$report_fileName);
         header('Cache-Control: max-age=0');
         $writer = new Xlsx($spreadsheet);
         $writer->save('php://output');
-        
     }
 
     /**
@@ -34,7 +32,7 @@ class Manage extends BaseController {
     }
 
     /**
-     * 
+     * 信用卡清單資料
      */
     public function TransactionList() {
         $this->isChkLogin();
@@ -76,6 +74,14 @@ class Manage extends BaseController {
     }
 
     /**
+     * 登出處理
+     */
+    public function logout() {
+        unset($_SESSION['USER_LOGIN']);
+        return view('templates/v_loginform',array('message'=>'已成功登出！'));
+    }
+
+    /**
      * 後台登入LDAP處理
      */
     public function login() {
@@ -83,24 +89,15 @@ class Manage extends BaseController {
         $pwd = isset($_POST["password"]) ? (string)$_POST["password"] : "";
         
         if($this->ldap_check($acc,$pwd)) {
-            if(in_array($acc,array("FZ083","OT195","OT119"))) {
+            if(in_array($acc,explode(',',getenv('AdminManage')))) {
                 $_SESSION['USER_LOGIN'] = 1;
                 $this->main();
             } else {
                 return view('templates/loginform',array('message' => "沒有使用權限！"));
             }
-            
         } else {
             return view('templates/loginform',array('message' => "帳號或者密碼錯誤！"));
         }
-    }
-
-    /**
-     * 登出處理
-     */
-    public function logout() {
-        unset($_SESSION['USER_LOGIN']);
-        return view('templates/v_loginform',array('message'=>'已成功登出！'));
     }
 
     /**
