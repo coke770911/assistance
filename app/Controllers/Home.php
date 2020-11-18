@@ -16,10 +16,14 @@ class Home extends BaseController {
         echo view('v_index', $data);       
     }
 
-    #驗證資訊
+
+    /**
+     * 驗證表單資訊
+     * @var $p_id 最多20碼
+     */
     public function cashcheck() {
         //訂單編號與訂單時間
-        $p_id = "OIT".time();
+        $p_id = "OIT".time().rand(10001,20000);
         $OrderDate = date('Y/m/d H:i:s');
 
         $money = isset($_POST["money"]) ? $_POST["money"] : 0 ;
@@ -37,15 +41,15 @@ class Home extends BaseController {
             die("捐款金額一百元至十萬元新台幣整。");
         }
 
-        if(strlen($name) > 450) {
+        if(strlen($name) > 50) {
             die("捐款人姓名輸入字元過多。");
         }
 
-        if(strlen($tel) > 450) {
+        if(strlen($tel) > 50) {
             die("聯絡電話輸入字元過多。");
         }
 
-        if(strlen($email) > 450) {
+        if(strlen($email) > 50) {
             die("Email輸入字元過多。");
         }
 
@@ -58,7 +62,7 @@ class Home extends BaseController {
         }
 
         echo "將為您導向綠界金流平台！...";
-        
+
         $data = array(
             "tl_id" => 0,
             "tl_pid" => $p_id,
@@ -74,33 +78,41 @@ class Home extends BaseController {
             "tl_create_time" => $OrderDate,
             "tl_modtfy_time" => $OrderDate
         );
+        //將申請付款的資料寫入資料庫
         $TransactionList = model('App\Models\TransactionList', true);
         $TransactionList->setValue($data);
-        //$TransactionList->update_table();
+        $TransactionList->update_table();
+
+        //準備處理綠界導向的參數
         $this->cashflow($p_id,$money,$OrderDate);
     }
 
-    #金流處理
+    /**
+     * 綠界金流處理
+     * @var $p_id 產生的訂單編號
+     * @var $p_money 金額
+     * @var $OrderDate 產生訂單日期
+     */
     private function cashflow($p_id = '',$p_money = 0,$OrderDate) {
         $MerchantTradeNo = $p_id;
         $Money = $p_money; 
         try {
             $obj = new ECPay();
             #商店參數
-            $obj->ServiceURL  = "https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5";   //服務位置
+            $obj->ServiceURL  = "https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5";     //服務位置
             $obj->HashKey     = $_ENV["HashKey"] ;                                               //測試用Hashkey，請自行帶入ECPay提供的HashKey
             $obj->HashIV      = $_ENV["HashIV"] ;                                                //測試用HashIV，請自行帶入ECPay提供的HashIV
-            $obj->MerchantID  = $_ENV["MerchantID"] ;                                                    //測試用MerchantID，請自行帶入ECPay提供的MerchantID
+            $obj->MerchantID  = $_ENV["MerchantID"] ;                                            //測試用MerchantID，請自行帶入ECPay提供的MerchantID
             $obj->EncryptType = $_ENV["EncryptType"] ;                                           //CheckMacValue加密類型，請固定填入1，使用SHA256加密
 
             #基本參數(請依系統規劃自行調整)
-            $obj->Send['ReturnURL']         = "https://donate.oit.edu.tw/Home/cashflowresult" ; //付款完成通知回傳的網址
-            $obj->Send['MerchantTradeNo']   = $MerchantTradeNo;                                 //訂單編號
-            $obj->Send['MerchantTradeDate'] = $OrderDate;                                       //交易時間
-            $obj->Send['TotalAmount']       = $Money;                                           //交易金額
-            $obj->Send['TradeDesc']         = urlencode("助學捐款") ;                            //交易描述
-            $obj->Send['ChoosePayment']     = \ECPay_PaymentMethod::ALL ;                       //付款方式:全功能
-            $obj->Send['ClientBackURL']     = "https://donate.oit.edu.tw";                      //返回主首頁
+            $obj->Send['ReturnURL']         = $_ENV['ReturnURL'] ;  //付款完成通知回傳的網址
+            $obj->Send['MerchantTradeNo']   = $MerchantTradeNo;                                  //訂單編號
+            $obj->Send['MerchantTradeDate'] = $OrderDate ;                                       //交易時間
+            $obj->Send['TotalAmount']       = $Money ;                                           //交易金額
+            $obj->Send['TradeDesc']         = urlencode("助學捐款") ;                             //交易描述
+            $obj->Send['ChoosePayment']     = \ECPay_PaymentMethod::ALL ;                        //付款方式:全功能
+            $obj->Send['ClientBackURL']     = $_ENV['ClientBackURL'] ;                           //返回主首頁
                            
             //訂單的商品資料
             array_push($obj->Send['Items'], array(
@@ -165,10 +177,4 @@ class Home extends BaseController {
         echo '1|OK';
     }
 
-    /**
-     * 
-     */
-    public function flowResult() {
-
-    } 
 }
