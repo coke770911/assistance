@@ -3,16 +3,49 @@ namespace App\Controllers;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Writer\Xls;
 class Manage extends BaseController {
 	public function index()	{
         return view('templates/v_loginform',array('message'=>''));
     }
 
+    /**
+     * 匯出搜尋報表
+     */
     public function exreportlist() {
+
+        $data['field'] = array(
+            'FormDate' => isset($_GET['FormDate']) ? $_GET['FormDate'] : '' ,
+            'FormTime' => isset($_GET['FormTime']) ? $_GET['FormTime'] : '00:00' ,
+            'ToDate' => isset($_GET['ToDate']) ? $_GET['ToDate'] : '',
+            'ToTime' => isset($_GET['ToTime']) ? $_GET['ToTime'] : '23:59',
+            'Pid' => isset($_GET['Pid']) ? $_GET['Pid'] : '',
+            'is_pay' => isset($_GET['is_pay']) ? $_GET['is_pay'] : '',
+            'tl_receipt' => isset($_GET['tl_receipt']) ? $_GET['tl_receipt'] : '',
+        );
+        $TransactionList = model('App\Models\TransactionList', true);
+        $TransactionList->setValue(array(
+            "FromDateTime" => $_GET['FormDate'] !== '' ? date_format(date_create($_GET['FormDate'].' '.$_GET['FormTime']),'Y-m-d H:i:s') : '',
+            "ToDateTime" => $_GET['FormDate'] !== '' ? date_format(date_create($_GET['ToDate'] .' '. $_GET['ToTime']),'Y-m-d H:i:s') : '',
+            "tl_pid" => $_GET['Pid'] !== '' ? $_GET['Pid'] : '',
+            "tl_is_pay" => $data['field']['is_pay'] == 1 ? $data['field']['is_pay'] : '',
+            "tl_receipt" => $data['field']['tl_receipt'] == 1 ? $data['field']['tl_receipt'] : ''
+        ));
+
+        $data['list'] = $TransactionList->getList();
+   
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', '這是第一格');
-
+        $sheet->setCellValue('A1', '交易編號');
+        $sheet->setCellValue('B1', '這是第一格');
+        $sheet->setCellValue('C1', '這是第一格');
+        $sheet->setCellValue('D1', '這是第一格');
+        $sheet->setCellValue('E1', '這是第一格');
+        $sheet->setCellValue('F1', '這是第一格');
+        $sheet->setCellValue('G1', '這是第一格');
+        $sheet->setCellValue('H1', '這是第一格');
+        
+     
         $report_fileName = date("Ymd")."對帳捐款資料.xlsx";
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename='.$report_fileName);
