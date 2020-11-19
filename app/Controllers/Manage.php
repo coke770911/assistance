@@ -13,7 +13,7 @@ class Manage extends BaseController {
      * 匯出搜尋報表
      */
     public function exreportlist() {
-
+        $this->isChkLogin();
         $data['field'] = array(
             'FormDate' => isset($_GET['FormDate']) ? $_GET['FormDate'] : '' ,
             'FormTime' => isset($_GET['FormTime']) ? $_GET['FormTime'] : '00:00' ,
@@ -36,14 +36,33 @@ class Manage extends BaseController {
    
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', '交易編號');
-        $sheet->setCellValue('B1', '這是第一格');
-        $sheet->setCellValue('C1', '這是第一格');
-        $sheet->setCellValue('D1', '這是第一格');
-        $sheet->setCellValue('E1', '這是第一格');
-        $sheet->setCellValue('F1', '這是第一格');
-        $sheet->setCellValue('G1', '這是第一格');
-        $sheet->setCellValue('H1', '這是第一格');
+        $sheet
+            ->setCellValue('A1', '交易編號')
+            ->setCellValue('B1', '交易時間')
+            ->setCellValue('C1', '金額')
+            ->setCellValue('D1', '捐款人姓名')
+            ->setCellValue('E1', '是否索取收據')
+            ->setCellValue('F1', '是否付款成功')
+            ->setCellValue('G1', '捐款人信箱')
+            ->setCellValue('H1', '捐款人電話')
+            ->setCellValue('I1', '捐款人姓名地址')
+            ->setCellValue('J1', '捐款人留言');
+
+        foreach($data['list'] AS $key => $val) {
+            $is_receipt = $val['tl_receipt'] == '0' ? '不需要收據' : '需要收據' ;
+            $is_pay = $val['tl_is_pay'] == '0' ? '未完成付款' : '已完成付款' ;           
+            $sheet
+                ->setCellValue('A'.($key+2), $val['tl_pid'])
+                ->setCellValue('B'.($key+2), $val['tl_create_time'])
+                ->setCellValue('C'.($key+2), $val['tl_money'])
+                ->setCellValue('D'.($key+2), $val['tl_name'])
+                ->setCellValue('E'.($key+2), $is_receipt)
+                ->setCellValue('F'.($key+2), $is_pay)
+                ->setCellValue('G'.($key+2), $val['tl_email'])
+                ->setCellValue('H'.($key+2), $val['tl_tel'])
+                ->setCellValue('I'.($key+2), $val['tl_address'])
+                ->setCellValue('J'.($key+2), $val['tl_message']);
+        }
         
      
         $report_fileName = date("Ymd")."對帳捐款資料.xlsx";

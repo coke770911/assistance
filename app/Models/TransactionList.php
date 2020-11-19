@@ -49,8 +49,26 @@ class TransactionList extends Model {
             $this->tl_receipt,
             $this->tl_receipt,
         );
-        $sql = "SELECT * FROM [Assistance].[dbo].[TransactionList] WHERE 
-        (([tl_create_time] BETWEEN ? AND ?) OR ('' = ?))
+        $sql = "SELECT 
+            [tl_id]
+            ,[tl_pid]
+            ,[tl_money]
+            ,[tl_receipt]
+            ,[tl_name]
+            ,[tl_email]
+            ,[tl_tel]
+            ,ISNULL([tl_message],'') AS tl_message
+            ,ISNULL((SELECT city_name FROM [Assistance].[dbo].[ref_city] WHERE city_code = [tl_city]),'') AS city_name
+            ,ISNULL((SELECT city_name FROM [Assistance].[dbo].[ref_city] WHERE city_code = [tl_city_area] ),'') AS city_area_name
+            ,[tl_address]
+            ,CASE WHEN ([tr_MerchantTradeNo]) IS NULL THEN [tl_is_pay] ELSE 1 END AS tl_is_pay
+            ,ISNULL([tr_PaymentType],'') AS tl_pay_type
+            ,[tl_create_time]
+            ,[tl_modtfy_time]
+            ,[tr_MerchantTradeNo]
+        FROM [Assistance].[dbo].[TransactionList]
+        LEFT JOIN [Assistance].[dbo].[TransactionReturn] ON tl_pid = tr_MerchantTradeNo
+        WHERE (([tl_create_time] BETWEEN ? AND ?) OR ('' = ?))
         AND ('' = ? OR tl_pid LIKE ?)
         AND ('' = ? OR tl_is_pay = ?)
         AND ('' = ? OR tl_receipt = ?)";
