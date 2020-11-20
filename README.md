@@ -4,6 +4,7 @@
 - PHP 7.4.10基底
 - CodeIgniter 4.0.4
 - SQL Server
+- Bootstrap v5
 ## 伺服器依存套件
 
 - [intl](http://php.net/manual/en/intl.requirements.php)
