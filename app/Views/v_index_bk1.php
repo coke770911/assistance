@@ -168,7 +168,7 @@
             </footer>
         </section>
         <!-- Copyright -->
-        <div class="copyright">&copy; 完善就學計畫網站.</div>
+        <div class="copyright">&copy; 2020 完善就學計畫網站.</div>
     </div>
     <!-- Scripts -->
     <script src="assets/js/jquery.min.js"></script>
