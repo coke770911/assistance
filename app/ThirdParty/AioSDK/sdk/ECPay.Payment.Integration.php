@@ -1614,7 +1614,7 @@ if(!class_exists('ECPay_CheckMacValue', false))
 
                     case ECPay_EncryptType::ENC_MD5:
                     default:
-                    // MD5 編碼
+                        // MD5 編碼
                         $sMacValue = md5($sMacValue);
                 }
 
@@ -1678,4 +1678,3 @@ if(!class_exists('ECPay_CheckMacValue', false))
 
     }
 }
-

@@ -99,49 +99,31 @@ class Home extends BaseController {
         try {
             $obj = new ECPay();
             #商店參數
-            $obj->ServiceURL  = "https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5";     //服務位置
-            $obj->HashKey     = $_ENV["HashKey"] ;                                               //測試用Hashkey，請自行帶入ECPay提供的HashKey
-            $obj->HashIV      = $_ENV["HashIV"] ;                                                //測試用HashIV，請自行帶入ECPay提供的HashIV
-            $obj->MerchantID  = $_ENV["MerchantID"] ;                                            //測試用MerchantID，請自行帶入ECPay提供的MerchantID
-            $obj->EncryptType = $_ENV["EncryptType"] ;                                           //CheckMacValue加密類型，請固定填入1，使用SHA256加密
+            $obj->ServiceURL  = $_ENV["ServiceURL"] ;       //服務位置
+            $obj->HashKey     = $_ENV["HashKey"] ;          //測試用Hashkey，請自行帶入ECPay提供的HashKey
+            $obj->HashIV      = $_ENV["HashIV"] ;           //測試用HashIV，請自行帶入ECPay提供的HashIV
+            $obj->MerchantID  = $_ENV["MerchantID"] ;       //測試用MerchantID，請自行帶入ECPay提供的MerchantID
+            $obj->EncryptType = $_ENV["EncryptType"] ;      //CheckMacValue加密類型，請固定填入1，使用SHA256加密
 
             #基本參數(請依系統規劃自行調整)
-            $obj->Send['ReturnURL']         = $_ENV['ReturnURL'] ;  //付款完成通知回傳的網址
-            $obj->Send['MerchantTradeNo']   = $MerchantTradeNo;                                  //訂單編號
-            $obj->Send['MerchantTradeDate'] = $OrderDate ;                                       //交易時間
-            $obj->Send['TotalAmount']       = $Money ;                                           //交易金額
-            $obj->Send['TradeDesc']         = urlencode("助學捐款") ;                             //交易描述
-            $obj->Send['ChoosePayment']     = \ECPay_PaymentMethod::ALL ;                        //付款方式:全功能
-            $obj->Send['ClientBackURL']     = $_ENV['ClientBackURL'] ;                           //返回主首頁
+            $obj->Send['ReturnURL']         = $_ENV['ReturnURL'] ;        //付款完成通知回傳的網址
+            $obj->Send['MerchantTradeNo']   = $MerchantTradeNo;           //訂單編號
+            $obj->Send['MerchantTradeDate'] = $OrderDate ;                //交易時間
+            $obj->Send['TotalAmount']       = $Money ;                    //交易金額
+            $obj->Send['TradeDesc']         = urlencode("助學捐款") ;      //交易描述
+            $obj->Send['ChoosePayment']     = \ECPay_PaymentMethod::ALL ; //付款方式:全功能
+            $obj->Send['ClientBackURL']     = $_ENV['ClientBackURL'] ;    //返回主首頁
+            $obj->Send['OrderResultURL']    = $_ENV['OrderResultURL'];    //返回自訂頁面
+            //$obj->Send['NeedExtraPaidInfo'] = 'Y';                        //額外的付款資訊
                            
             //訂單的商品資料
-            array_push($obj->Send['Items'], array(
-                    'Name' => "捐贈金額", 
-                    'Price' => (int)$Money,
-                    'Currency' => "元", 
-                    'Quantity' => (int) "1", 
-                    'URL' => "dedwed"
-                ));
-
-            # 電子發票參數
-            /*
-            $obj->Send['InvoiceMark'] = ECPay_InvoiceState::Yes;
-            $obj->SendExtend['RelateNumber'] = "Test".time();
-            $obj->SendExtend['CustomerEmail'] = 'test@ecpay.com.tw';
-            $obj->SendExtend['CustomerPhone'] = '0911222333';
-            $obj->SendExtend['TaxType'] = ECPay_TaxType::Dutiable;
-            $obj->SendExtend['CustomerAddr'] = '台北市南港區三重路19-2號5樓D棟';
-            $obj->SendExtend['InvoiceItems'] = array();
-            // 將商品加入電子發票商品列表陣列
-            foreach ($obj->Send['Items'] as $info)
-            {
-                array_push($obj->SendExtend['InvoiceItems'],array('Name' => $info['Name'],'Count' =>
-                    $info['Quantity'],'Word' => '個','Price' => $info['Price'],'TaxType' => ECPay_TaxType::Dutiable));
-            }
-            $obj->SendExtend['InvoiceRemark'] = '測試發票備註';
-            $obj->SendExtend['DelayDay'] = '0';
-            $obj->SendExtend['InvType'] = ECPay_InvType::General;
-            */
+            array_push($obj->Send['Items'], 
+                array('Name' => "捐贈金額", 
+                'Price' => (int)$Money,
+                'Currency' => "元", 
+                'Quantity' => (int) "1", 
+                'URL' => "dedwed"
+            ));
 
             $obj->CheckOut(); //產生訂單(auto submit至ECPay)
             
@@ -157,7 +139,6 @@ class Home extends BaseController {
     public function cashflowresult() {
         $obj = new ECPay();
         $returnCheckMacValue = \ECPay_CheckMacValue::generate($_POST,$_ENV["HashKey"],$_ENV["HashKey"],$_ENV["EncryptType"]);
-        $checkValue = $returnCheckMacValue;
 
         $data = array(
             "tr_MerchantTradeNo" => $_POST["MerchantTradeNo"],
@@ -166,15 +147,22 @@ class Home extends BaseController {
             "tr_TradeAmt" => $_POST["TradeAmt"],
             "tr_TradeDate" => $_POST["TradeDate"],
             "tr_TradeNo" => $_POST["TradeNo"],
-            "tr_content" => json_encode($_POST)
+            "tr_content" => json_encode($_POST),
         );
 
-        if($returnCheckMacValue === $_POST['CheckMacValue']) {
+        //if($returnCheckMacValue == $_POST['CheckMacValue']) {
             $TransactionReturn = model('App\Models\TransactionReturn', true);
             $TransactionReturn->setValue($data);
             $TransactionReturn->update_table();  
-        }
+        //}
         echo '1|OK';
     }
+    /*
+    public function keycheck() {
+        $obj = new ECPay();
+        $returnCheckMacValue = \ECPay_CheckMacValue::generate($_POST,$_ENV["HashKey"],$_ENV["HashKey"],$_ENV["EncryptType"]);
+        print_r($returnCheckMacValue);
 
+    }
+    */
 }
