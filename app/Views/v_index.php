@@ -71,9 +71,8 @@
             </div>
             <div class="content">
                 <div class="inner">
-                    <h1>“一起為亞東技術學院 2021年「完善就學協助機制」捐款”</h1>
-                    <p>現在只要您捐1元給亞東技術學院、教育部就補助1元，讓您的愛心加倍”Double”</p>
-                    <p>我們就有2萬元可以幫助亞東技術學院的學生追尋他的夢想</p>
+                    <h1>“為亞東技術學院 2021年<br>「完善就學協助機制」捐款”</h1>
+                    <p>現在只要您捐1元給亞東技術學院、教育部就補助1元，讓您的愛心加倍”Double”<br>我們就有2萬元可以幫助亞東技術學院的學生追尋他的夢想</p>
                 </div>
             </div>
             <nav>
@@ -216,7 +215,7 @@
                     </div>
                     <div class="field half">
                         <input type="radio" id="show_list_yes" name="show_list" value="1">
-                        <label for="receipt_yes">同意</label>
+                        <label for="show_list_yes">同意</label>
                     </div>
                     <div class="field" style="display: none;">
                         <label for="message">想說的話</label>
