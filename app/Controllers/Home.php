@@ -9,6 +9,7 @@ class Home extends BaseController {
     public function index()
     {   
         $city_data = model('App\Models\RefData', true);
+
         $data = array(
             "City" => $city_data->getCity(),
             "CityArea" => $city_data->getCityArea()
@@ -27,7 +28,7 @@ class Home extends BaseController {
         $OrderDate = date('Y/m/d H:i:s');
 
         $money = isset($_POST["money"]) ? $_POST["money"] : 0 ;
-        $receipt = isset($_POST["receipt"]) ? $_POST["receipt"] : "" ;
+        $receipt = isset($_POST["tl_is_receipt"]) ? $_POST["tl_is_receipt"] : "" ;
         $name = isset($_POST["name"]) ? $_POST["name"] : "" ;
         $tel = isset($_POST["tel"]) ? $_POST["tel"] : "" ;
         $email = isset($_POST["email"]) ? $_POST["email"] : "" ;
@@ -35,6 +36,10 @@ class Home extends BaseController {
         $city = isset($_POST["city"]) ? $_POST["city"] : "" ;
         $city_area = isset($_POST["city_area"]) ? $_POST["city_area"] : "" ;
         $address = isset($_POST["address"]) ? $_POST["address"] : "" ;
+
+        $tl_receipt_title = isset($_POST["tl_receipt_title"]) ? $_POST["tl_receipt_title"] : "" ;
+        $tl_std_id = isset($_POST["tl_std_id"]) ? $_POST["tl_std_id"] : "" ;
+        $tl_is_show = isset($_POST["tl_is_show"]) ? $_POST["tl_is_show"] : 0 ;
         
         //參數檢查避免傳送至綠界出錯
         if(!is_numeric($money) || !($money >= 100 &&  $money <= 100000)) {
@@ -57,8 +62,12 @@ class Home extends BaseController {
             die("想說的話輸入字元過多。");
         }
 
-        if(strlen($address) > 150) {
-            die("地址輸入字元過多。");
+        if(strlen($tl_receipt_title) > 150) {
+            die("收據抬頭輸入名稱過長。");
+        }
+
+        if(strlen($tl_std_id) > 30) {
+            die("學號字元輸入過長。");
         }
 
         echo "將為您導向綠界金流平台！...";
@@ -67,7 +76,7 @@ class Home extends BaseController {
             "tl_id" => 0,
             "tl_pid" => $p_id,
             "tl_money" => $money,
-            "tl_receipt" => $receipt,
+            "tl_is_receipt" => $receipt,
             "tl_name" => $name,
             "tl_email" => $email,
             "tl_tel" => $tel,
@@ -76,15 +85,17 @@ class Home extends BaseController {
             "tl_city_area" => $city_area,
             "tl_address" => $address,
             "tl_create_time" => $OrderDate,
-            "tl_modtfy_time" => $OrderDate
+            "tl_modtfy_time" => $OrderDate,
+            "tl_receipt_title" => $tl_receipt_title,
+            "tl_std_id" => $tl_std_id,
+            "tl_is_show" => $tl_is_show,
         );
         //將申請付款的資料寫入資料庫
         $TransactionList = model('App\Models\TransactionList', true);
         $TransactionList->setValue($data);
         $TransactionList->update_table();
-
         //準備處理綠界導向的參數
-        $this->cashflow($p_id,$money,$OrderDate);
+        //$this->cashflow($p_id,$money,$OrderDate);
     }
 
     /**

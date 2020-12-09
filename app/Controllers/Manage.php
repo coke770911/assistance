@@ -21,7 +21,7 @@ class Manage extends BaseController {
             'ToTime' => isset($_GET['ToTime']) ? $_GET['ToTime'] : '23:59',
             'Pid' => isset($_GET['Pid']) ? $_GET['Pid'] : '',
             'is_pay' => isset($_GET['is_pay']) ? $_GET['is_pay'] : '',
-            'tl_receipt' => isset($_GET['tl_receipt']) ? $_GET['tl_receipt'] : '',
+            'tl_is_receipt' => isset($_GET['tl_is_receipt']) ? $_GET['tl_is_receipt'] : '',
         );
         $TransactionList = model('App\Models\TransactionList', true);
         $TransactionList->setValue(array(
@@ -29,7 +29,7 @@ class Manage extends BaseController {
             "ToDateTime" => $_GET['FormDate'] !== '' ? date_format(date_create($_GET['ToDate'] .' '. $_GET['ToTime']),'Y-m-d H:i:s') : '',
             "tl_pid" => $_GET['Pid'] !== '' ? $_GET['Pid'] : '',
             "tl_is_pay" => $data['field']['is_pay'] == 1 ? $data['field']['is_pay'] : '',
-            "tl_receipt" => $data['field']['tl_receipt'] == 1 ? $data['field']['tl_receipt'] : ''
+            "tl_is_receipt" => $data['field']['tl_is_receipt'] == 1 ? $data['field']['tl_is_receipt'] : ''
         ));
 
         $data['list'] = $TransactionList->getList();
@@ -40,28 +40,34 @@ class Manage extends BaseController {
             ->setCellValue('A1', '交易編號')
             ->setCellValue('B1', '交易時間')
             ->setCellValue('C1', '金額')
-            ->setCellValue('D1', '捐款人姓名')
-            ->setCellValue('E1', '是否索取收據')
-            ->setCellValue('F1', '是否付款成功')
-            ->setCellValue('G1', '捐款人信箱')
-            ->setCellValue('H1', '捐款人電話')
-            ->setCellValue('I1', '捐款人姓名地址')
-            ->setCellValue('J1', '捐款人留言');
+            ->setCellValue('D1', '收據抬頭')
+            ->setCellValue('E1', '學號')
+            ->setCellValue('F1', '捐款人姓名')
+            ->setCellValue('G1', '是否索取收據')
+            ->setCellValue('H1', '是否付款成功')
+            ->setCellValue('I1', '捐款人信箱')
+            ->setCellValue('J1', '捐款人電話')
+            ->setCellValue('K1', '捐款人姓名地址')
+            ->setCellValue('L1', '捐款人留言');
+
 
         foreach($data['list'] AS $key => $val) {
-            $is_receipt = $val['tl_receipt'] == '0' ? '不需要收據' : '需要收據' ;
+            $is_receipt = $val['tl_is_receipt'] == '0' ? '不需要收據' : '需要收據' ;
             $is_pay = $val['tl_is_pay'] == '0' ? '未完成付款' : '已完成付款' ;           
             $sheet
                 ->setCellValue('A'.($key+2), $val['tl_pid'])
                 ->setCellValue('B'.($key+2), $val['tl_create_time'])
                 ->setCellValue('C'.($key+2), $val['tl_money'])
-                ->setCellValue('D'.($key+2), $val['tl_name'])
-                ->setCellValue('E'.($key+2), $is_receipt)
-                ->setCellValue('F'.($key+2), $is_pay)
-                ->setCellValue('G'.($key+2), $val['tl_email'])
-                ->setCellValue('H'.($key+2), $val['tl_tel'])
-                ->setCellValue('I'.($key+2), $val['tl_address'])
-                ->setCellValue('J'.($key+2), $val['tl_message']);
+                ->setCellValue('D'.($key+2), $val['tl_receipt_title'])
+                ->setCellValue('E'.($key+2), $val['tl_std_id'])
+                ->setCellValue('F'.($key+2), $val['tl_name'])
+                ->setCellValue('G'.($key+2), $is_receipt)
+                ->setCellValue('H'.($key+2), $is_pay)
+                ->setCellValue('I'.($key+2), $val['tl_email'])
+                ->setCellValue('J'.($key+2), $val['tl_tel'])
+                ->setCellValue('K'.($key+2), $val['tl_address'])
+                ->setCellValue('L'.($key+2), $val['tl_message']);
+
         }
         
      
@@ -97,7 +103,7 @@ class Manage extends BaseController {
             'ToTime' => isset($_POST['ToTime']) ? $_POST['ToTime'] : '23:59',
             'Pid' => isset($_POST['Pid']) ? $_POST['Pid'] : '',
             'is_pay' => isset($_POST['is_pay']) ? $_POST['is_pay'] : '',
-            'tl_receipt' => isset($_POST['tl_receipt']) ? $_POST['tl_receipt'] : '',
+            'tl_is_receipt' => isset($_POST['tl_is_receipt']) ? $_POST['tl_is_receipt'] : '',
         );
         
         //GET方式 初始化刷新
@@ -114,7 +120,7 @@ class Manage extends BaseController {
             "ToDateTime" => $_POST['FormDate'] !== '' ? date_format(date_create($_POST['ToDate'] .' '. $_POST['ToTime']),'Y-m-d H:i:s') : '',
             "tl_pid" => $_POST['Pid'] !== '' ? $_POST['Pid'] : '',
             "tl_is_pay" => $data['field']['is_pay'] == 1 ? $data['field']['is_pay'] : '',
-            "tl_receipt" => $data['field']['tl_receipt'] == 1 ? $data['field']['tl_receipt'] : ''
+            "tl_is_receipt" => $data['field']['tl_is_receipt'] == 1 ? $data['field']['tl_is_receipt'] : ''
         ));
 
         $data['list'] = $TransactionList->getList();

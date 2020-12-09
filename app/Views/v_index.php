@@ -149,11 +149,11 @@
                 <form name="dataform" action="/Home/cashcheck" method="post"">
                     <div class="fields">
                     <div class="field half">
-                        <input type="radio" id="receipt_no" name="receipt" value="0" checked>
+                        <input type="radio" id="receipt_no" name="tl_is_receipt" value="0" checked>
                         <label for="receipt_no">不索取捐款收據</label>
                     </div>
                     <div class="field half">
-                        <input type="radio" id="receipt_yes" name="receipt" value="1">
+                        <input type="radio" id="receipt_yes" name="tl_is_receipt" value="1">
                         <label for="receipt_yes">索取捐款收據</label>
                     </div>
                     <div class="field half">
@@ -181,8 +181,8 @@
                         </select>
                     </div>
                     <div class="field half formHide">
-                        <label for="receiptTitle">收據抬頭</label>
-                        <input type="text" name="receiptTitle" id="receiptTitle" placeholder="收據抬頭" />
+                        <label for="tl_receipt_title">收據抬頭</label>
+                        <input type="text" name="tl_receipt_title" id="tl_receipt_title" placeholder="收據抬頭" />
                     </div>
                     <div class="field formHide">
                         <label for="address">收據地址</label>
@@ -203,18 +203,18 @@
                     </div>
                     <div class="field half">
                         <label for="stdId">您的學號</label>
-                        <input type="text" name="stdId" id="stdId" placeholder="學號" />
+                        <input type="text" name="tl_std_id" id="stdId" placeholder="學號" />
                     </div>
                     <div class="field half"></div>
                     <div class="field">
                     <label>是否同意公開您的捐款紀錄於捐款名冊上？</label>
                     </div>
                     <div class="field half">
-                        <input type="radio" id="show_list_no" name="show_list" value="0" checked>
+                        <input type="radio" id="show_list_no" name="tl_is_show" value="0" checked>
                         <label for="show_list_no">不同意</label>
                     </div>
                     <div class="field half">
-                        <input type="radio" id="show_list_yes" name="show_list" value="1">
+                        <input type="radio" id="show_list_yes" name="tl_is_show" value="1">
                         <label for="show_list_yes">同意</label>
                     </div>
                     <div class="field" style="display: none;">
@@ -257,7 +257,7 @@
         $(".city" + e.value).show();
     }
 
-    $('body').on('change','input[name="receipt"]',function() {
+    $('body').on('change','input[name="tl_is_receipt"]',function() {
         if($(this).val() == '1') {
             $('.formHide').show()
         } else {

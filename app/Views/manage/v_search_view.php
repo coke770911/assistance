@@ -35,9 +35,9 @@
                 </label>
             </div>
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="tl_receipt" value="1" id="tl_receipt"
-                    <?= $field['tl_receipt'] == 1 ? 'checked' : '' ?>>
-                <label class="form-check-label" for="tl_receipt">
+                <input class="form-check-input" type="checkbox" name="tl_is_receipt" value="1" id="tl_is_receipt"
+                    <?= $field['tl_is_receipt'] == 1 ? 'checked' : '' ?>>
+                <label class="form-check-label" for="tl_is_receipt">
                     需收據
                 </label>
             </div>

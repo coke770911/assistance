@@ -27,14 +27,16 @@
                     </td>
                     <td class="text-center">
                         <input class="form-check-input" type="checkbox" value="" id="flexCheckCheckedDisabled"
-                            <?=$val['tl_receipt'] == 1 ? "checked" : "" ?> disabled>
+                            <?=$val['tl_is_receipt'] == 1 ? "checked" : "" ?> disabled>
                     </td>
                     <td class="text-center d-print-none">
                         <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal"
                             data-OrderNumber="<?=$val['tl_pid'] ?>" data-money="<?=$val['tl_money'] ?>"
                             data-payer="<?=$val['tl_name'] ?>" data-email="<?=$val['tl_email'] ?>"
                             data-tel="<?=$val['tl_tel'] ?>" data-message="<?=$val['tl_message'] ?>"
-                            data-address="<?=$val['city_name'].$val['city_area_name'].$val['tl_address'] ?>">詳細</button>
+                            data-address="<?=$val['city_name'].$val['city_area_name'].$val['tl_address'] ?>"
+                            data-stdId="<?=$val['tl_std_id'] ?>" 
+                            data-receiptTitle="<?=$val['tl_receipt_title'] ?>">詳細</button>
                         <button type="button" class="btn btn-warning">收據</button>
                     </td>
                 </tr>
@@ -55,11 +57,21 @@
                                 <input type="text" class="form-control" id="txt_money" disabled>
                             </div>
                             <div class="mb-3">
+                                <label for="txt_Title" class="col-form-label">收據抬頭</label>
+                                <input type="text" class="form-control" id="txt_Title" disabled>
+                            </div>
+                            <div class="mb-3">
+                                <label for="txt_address" class="col-form-label">收據地址</label>
+                                <input type="text" class="form-control" id="txt_address" disabled>
+                            </div>
+                            <div class="mb-3">
+                                <label for="txt_stdId" class="col-form-label">學號</label>
+                                <input type="text" class="form-control" id="txt_stdId" disabled>
+                            </div>
+                            <div class="mb-3">
                                 <label for="txt_payer" class="col-form-label">捐款人</label>
                                 <input type="text" class="form-control" id="txt_payer" disabled>
                             </div>
-
-
                             <div class="mb-3">
                                 <label for="txt_email" class="col-form-label">捐款人Email</label>
                                 <input type="text" class="form-control" id="txt_email" disabled>
@@ -68,7 +80,7 @@
                                 <label for="txt_tel" class="col-form-label">捐款人電話</label>
                                 <input type="text" class="form-control" id="txt_tel" disabled>
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-3" style="display: none;">
                                 <label for="txt_message" class="col-form-label">訊息</label>
                                 <textarea class="form-control" id="txt_message" disabled></textarea>
                             </div>
@@ -95,6 +107,10 @@ exampleModal.addEventListener('show.bs.modal', function(event) {
     var tel = button.getAttribute('data-tel')
     var message = button.getAttribute('data-message')
 
+    var receiptTitle = button.getAttribute('data-receiptTitle')
+    var address = button.getAttribute('data-address')
+    var stdId = button.getAttribute('data-stdId')
+    
     var modalTitle = exampleModal.querySelector('.modal-title')
     var txt_money = exampleModal.querySelector('.modal-body #txt_money')
     var txt_payer = exampleModal.querySelector('.modal-body #txt_payer')
@@ -102,11 +118,18 @@ exampleModal.addEventListener('show.bs.modal', function(event) {
     var txt_tel = exampleModal.querySelector('.modal-body #txt_tel')
     var txt_message = exampleModal.querySelector('.modal-body #txt_message')
 
+    var txt_Title = exampleModal.querySelector('.modal-body #txt_Title')
+    var txt_address = exampleModal.querySelector('.modal-body #txt_address')
+    var txt_stdId = exampleModal.querySelector('.modal-body #txt_stdId')
+
     modalTitle.textContent = '捐款編號 ' + OrderNumber
     txt_money.value = money
     txt_payer.value = payer
     txt_email.value = email
     txt_tel.value = tel
     txt_message.value = message
+    txt_Title.value = receiptTitle
+    txt_address.value = address
+    txt_stdId.value = stdId
 })
 </script>
