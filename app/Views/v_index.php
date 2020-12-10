@@ -53,6 +53,11 @@
         display: none;
     }
 
+    .error {
+        color:red;
+        font-weight: bold;
+    }
+
     </style>
     <noscript>
         <link rel="stylesheet" href="assets/css/noscript.css" />
@@ -146,7 +151,7 @@
             <!-- Contact -->
             <article id="contact">
                 <h2 class="major">線上捐款</h2>
-                <form name="dataform" action="/Home/cashcheck" method="post"">
+                <form id="form" name="dataform" action="/Home/cashcheck" method="post"">
                     <div class="fields">
                     <div class="field half">
                         <input type="radio" id="receipt_no" name="tl_is_receipt" value="0" checked>
@@ -197,10 +202,12 @@
                         <label for="tel">連絡電話</label>
                         <input type="text" name="tel" id="tel" placeholder="連絡電話" />
                     </div>
+                    <div class="field half"></div>
                     <div class="field half">
                         <label for="email">電子信箱</label>
                         <input type="email" name="email" id="email" placeholder="電子信箱" />
                     </div>
+                    <div class="field half"></div>
                     <div class="field half">
                         <label for="stdId">您的學號</label>
                         <input type="text" name="tl_std_id" id="stdId" placeholder="學號" />
@@ -247,10 +254,72 @@
     <script src="assets/js/breakpoints.min.js"></script>
     <script src="assets/js/util.js"></script>
     <script src="assets/js/main.js"></script>
+    <script src="assets/js/jquery.validate.min.js"></script>
     <script>
     $(function() {
         $('.CityArea').hide();
+
+        $('#form').validate({
+            onkeyup: function(element, event) {
+            //去除左側空白
+            var value = this.elementValue(element).replace(/^\s+/g, "");
+            $(element).val(value);
+            },rules: {
+                money: {
+                    required: true,
+                    maxlength: 6,
+                    range: [100, 100000],
+                    number: true,
+                },
+                name: {
+                    required: true,
+                    maxlength: 20,
+                },
+                tel: {
+                    required: true,
+                    maxlength: 25,
+                },
+                email: {
+                    required: true,
+                    maxlength: 50,
+                    email: true,
+                },
+                tl_std_id: {
+                    required: true,
+                    maxlength: 20,
+                },
+            },messages: {
+                money: {
+                    required:'金額未填寫',
+                    maxlength: '最多輸入6個數字',
+                    range: '捐款金額最少一百元至最多十萬元整',
+                    number: '金額需為數字',                   
+                },
+                name: {
+                    required: '捐款人姓名未填寫',
+                    maxlength: '捐款人姓名最多20個字',
+                },
+                tel: {
+                    required: '連絡電話未填寫',
+                    maxlength: '連絡電話最多長度25個字元',
+                },
+                email: {
+                    required: '電子信箱未填寫',
+                    maxlength: '電子信箱長度最多50個字元',
+                    email: '您輸入的信箱格式有錯誤',
+                },
+                tl_std_id: {
+                    required: '請輸入您的學號',
+                    maxlength: '學號最多20個字元',
+                },
+            }, 
+            submitHandler: function(form) {
+            form.submit();
+        }});
+
     })
+
+
     var selArea = function(e) {
         $('.CityArea').hide();
         document.getElementById('city_area').selectedIndex = 0
