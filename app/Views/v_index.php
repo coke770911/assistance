@@ -98,9 +98,9 @@
             <nav>
                 <ul>
                     <li><a href="#intro">用途說明</a></li>
-                    <li><a href="#contact"><span class="fontColor">線上捐款</span></a></li>
                     <li><a href="#Results">計畫成果</a></li>
                     <li><a href="#Rosterlist">捐款名冊</a></li>
+                    <li><a href="#contact"><span class="fontColor">線上捐款</span></a></li>
                 </ul>
             </nav>
         </header>
@@ -149,7 +149,7 @@
             <article id="Rosterlist">
                 <h2 class="major">捐款名冊 - 歷年捐款紀錄</h2>
                 <ul>
-                    <li class="li-style">
+                    <li>
                         <h3>108年捐款人</h3>
                         <ol>
                             <li>
