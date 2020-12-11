@@ -51,6 +51,9 @@
         <div class="col-auto">
             <a class="btn btn-secondary" href="/manage/TransactionList">清除搜尋資料</a>
         </div>
+        <div class="col-auto">
+            <a class="btn btn-light" href="/manage/UpdateTrade">更新付款資料</a>
+        </div>
     </form>
 </div>
 <script>

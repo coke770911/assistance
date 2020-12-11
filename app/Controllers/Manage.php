@@ -79,6 +79,14 @@ class Manage extends BaseController {
         $writer->save('php://output');
     }
 
+    public function UpdateTrade() {
+        $this->isChkLogin();
+        $data = array();
+        echo view('templates/v_header', $data);
+        echo view('manage/v_search_view.php', $data);
+        echo view('templates/v_footer', $data);
+    }
+
     /**
      * 主畫面頁面
      */

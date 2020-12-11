@@ -66,7 +66,7 @@ class Home extends BaseController {
             die("收據抬頭輸入名稱過長。");
         }
 
-        if(strlen($tl_std_id) > 30) {
+        if(strlen($tl_std_id) > 20) {
             die("學號字元輸入過長。");
         }
 
@@ -95,7 +95,7 @@ class Home extends BaseController {
         $TransactionList->setValue($data);
         $TransactionList->update_table();
         //準備處理綠界導向的參數
-        //$this->cashflow($p_id,$money,$OrderDate);
+        $this->cashflow($p_id,$money,$OrderDate);
     }
 
     /**
@@ -124,8 +124,8 @@ class Home extends BaseController {
             $obj->Send['TradeDesc']         = urlencode("助學捐款") ;      //交易描述
             $obj->Send['ChoosePayment']     = \ECPay_PaymentMethod::ALL ; //付款方式:全功能
             $obj->Send['ClientBackURL']     = $_ENV['ClientBackURL'] ;    //返回主首頁
-            $obj->Send['OrderResultURL']    = $_ENV['OrderResultURL'];    //返回自訂頁面
-            //$obj->Send['NeedExtraPaidInfo'] = 'Y';                        //額外的付款資訊
+            //$obj->Send['OrderResultURL']    = $_ENV['OrderResultURL'];    //返回自訂頁面
+            $obj->Send['NeedExtraPaidInfo'] = 'Y';                        //額外的付款資訊
                            
             //訂單的商品資料
             array_push($obj->Send['Items'], 

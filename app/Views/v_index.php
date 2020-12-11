@@ -14,7 +14,7 @@
     <style>
     .li-style {
         list-style-type: none;
-        padding: 0.1rem 0rem 0.5rem 4rem;
+        padding: 0.1rem 0rem 0.5rem 5rem;
         margin-bottom: 1rem;
         position: relative;
     }
@@ -22,10 +22,10 @@
     .li-style:before {
         content: "";
         position: absolute;
-        top: 23px;
-        left: -37px;
-        width: 88px;
-        height: 88px;
+        top: 15px;
+        left: -25px;
+        width: 90px;
+        height: 90px;
         background-repeat: no-repeat;
     }
 
@@ -58,6 +58,21 @@
         font-weight: bold;
     }
 
+    #footer .copyright {
+        text-transform: none;
+    }
+
+    .fontColor {
+        color: #E3007F;
+    }
+
+    body {
+        background: #2d1e3c;
+    }
+
+   
+    
+
     </style>
     <noscript>
         <link rel="stylesheet" href="assets/css/noscript.css" />
@@ -77,15 +92,15 @@
             <div class="content">
                 <div class="inner">
                     <h1>“為亞東技術學院 2021年<br>「完善就學協助機制」捐款”</h1>
-                    <p>現在只要您捐1元給亞東技術學院、教育部就補助1元，讓您的愛心加倍”Double”<br>我們就有2萬元可以幫助亞東技術學院的學生追尋他的夢想</p>
+                    <p>現在只要您捐<span class="fontColor">1</span>元給亞東技術學院、教育部就補助<span class="fontColor">1</span>元，<span class="fontColor">讓您的愛心加倍”Double”</span><br>也就是當亞東技術學院多募到<span class="fontColor">1萬</span>元，<br>我們就有<span class="fontColor">2萬</span>元可以幫助亞東技術學院的學生追尋他的夢想</p>
                 </div>
             </div>
             <nav>
                 <ul>
                     <li><a href="#intro">用途說明</a></li>
+                    <li><a href="#contact"><span class="fontColor">線上捐款</span></a></li>
                     <li><a href="#Results">計畫成果</a></li>
                     <li><a href="#Rosterlist">捐款名冊</a></li>
-                    <li><a href="#contact">線上捐款</a></li>
                 </ul>
             </nav>
         </header>
@@ -126,17 +141,14 @@
                     </li>
                 </ul>
                 <ul>
-                    <li>107-108成果共輔導學生357人次</li>
-                    <li>109年累計輔導學生共585人次!</li>
+                    <li><h3>107-108成果共輔導學生357人次</h3></li>
+                    <li><h3>109年累計輔導學生共585人次!</h3></li>
                 </ul>
             </article>
 
             <article id="Rosterlist">
                 <h2 class="major">捐款名冊 - 歷年捐款紀錄</h2>
                 <ul>
-                    <li class="li-style">
-                        <h3>109年捐款人</h3>
-                    </li>
                     <li class="li-style">
                         <h3>108年捐款人</h3>
                         <ol>
@@ -209,12 +221,12 @@
                     </div>
                     <div class="field half"></div>
                     <div class="field half">
-                        <label for="stdId">您的學號</label>
+                        <label for="stdId">您的學號(非校友免填寫)</label>
                         <input type="text" name="tl_std_id" id="stdId" placeholder="學號" />
                     </div>
                     <div class="field half"></div>
                     <div class="field">
-                    <label>是否同意公開您的捐款紀錄於捐款名冊上？</label>
+                    <label>是否同意公開您的捐款紀錄於捐款名冊上</label>
                     </div>
                     <div class="field half">
                         <input type="radio" id="show_list_no" name="tl_is_show" value="0" checked>
@@ -284,10 +296,6 @@
                     maxlength: 50,
                     email: true,
                 },
-                tl_std_id: {
-                    required: true,
-                    maxlength: 20,
-                },
             },messages: {
                 money: {
                     required:'金額未填寫',
@@ -307,10 +315,6 @@
                     required: '電子信箱未填寫',
                     maxlength: '電子信箱長度最多50個字元',
                     email: '您輸入的信箱格式有錯誤',
-                },
-                tl_std_id: {
-                    required: '請輸入您的學號',
-                    maxlength: '學號最多20個字元',
                 },
             }, 
             submitHandler: function(form) {
