@@ -1,0 +1,128 @@
+#--------------------------------------------------------------------
+# Example Environment Configuration file
+# 環境控制檔 使用方式將env改成.env
+#--------------------------------------------------------------------
+
+#--------------------------------------------------------------------
+# ENVIRONMENT 開發 development 測試模式 testing 正式 production 
+#--------------------------------------------------------------------
+
+CI_ENVIRONMENT = production
+
+#--------------------------------------------------------------------
+# APP 環境變數
+#--------------------------------------------------------------------
+
+app.baseURL = ''
+
+# app.forceGlobalSecureRequests = false
+
+# app.sessionDriver = 'CodeIgniter\Session\Handlers\FileHandler'
+# app.sessionCookieName = 'ci_session'
+# app.sessionSavePath = NULL
+# app.sessionMatchIP = false
+# app.sessionTimeToUpdate = 300
+# app.sessionRegenerateDestroy = false
+
+# app.cookiePrefix = ''
+# app.cookieDomain = ''
+# app.cookiePath = '/'
+# app.cookieSecure = false
+# app.cookieHTTPOnly = false
+
+# app.CSRFProtection  = false
+# app.CSRFTokenName   = 'csrf_test_name'
+# app.CSRFCookieName  = 'csrf_cookie_name'
+# app.CSRFExpire      = 7200
+# app.CSRFRegenerate  = true
+# app.CSRFExcludeURIs = []
+# app.CSPEnabled = false
+
+#--------------------------------------------------------------------
+#LDAP認證伺服器
+#--------------------------------------------------------------------
+
+LDAPServer = ''
+LDAPDomain = ''
+AdminManage = ''
+
+#--------------------------------------------------------------------
+# 綠界金流串接
+#--------------------------------------------------------------------
+
+#--------------------------------------------------------------------
+#正式
+HashKey         = ''
+HashIV          = ''
+MerchantID      = ''
+EncryptType     = ''
+ServiceURL      = 'https://payment.ecpay.com.tw/Cashier/AioCheckOut/V5'
+ReturnURL       = ''
+ClientBackURL   = ''
+
+#--------------------------------------------------------------------
+#測試
+#HashKey         = '5294y06JbISpM5x9'
+#HashIV          = 'v77hoKGq4kWxNNIS'
+#MerchantID      = '2000214'
+#EncryptType     = '1'
+#ServiceURL      = 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5'
+#ReturnURL       = ''
+#ClientBackURL   = ''
+#OrderResultURL  = ''
+
+#--------------------------------------------------------------------
+# DATABASE 變數
+#--------------------------------------------------------------------
+
+database.default.hostname = ''
+database.default.database = 'Assistance'
+database.default.username = ''
+database.default.password = ''
+database.default.DBDriver = 'sqlsrv'
+database.default.port = ''
+
+database.tests.hostname = ''
+database.tests.database = 'Assistance'
+database.tests.username = ''
+database.tests.password = ''
+database.tests.DBDriver = 'sqlsrv'
+
+#--------------------------------------------------------------------
+# CONTENT SECURITY POLICY
+#--------------------------------------------------------------------
+
+# contentsecuritypolicy.reportOnly = false
+# contentsecuritypolicy.defaultSrc = 'none'
+# contentsecuritypolicy.scriptSrc = 'self'
+# contentsecuritypolicy.styleSrc = 'self'
+# contentsecuritypolicy.imageSrc = 'self'
+# contentsecuritypolicy.base_uri = null
+# contentsecuritypolicy.childSrc = null
+# contentsecuritypolicy.connectSrc = 'self'
+# contentsecuritypolicy.fontSrc = null
+# contentsecuritypolicy.formAction = null
+# contentsecuritypolicy.frameAncestors = null
+# contentsecuritypolicy.mediaSrc = null
+# contentsecuritypolicy.objectSrc = null
+# contentsecuritypolicy.pluginTypes = null
+# contentsecuritypolicy.reportURI = null
+# contentsecuritypolicy.sandbox = false
+# contentsecuritypolicy.upgradeInsecureRequests = false
+
+#--------------------------------------------------------------------
+# ENCRYPTION
+#--------------------------------------------------------------------
+
+# encryption.key = 
+# encryption.driver = OpenSSL
+
+#--------------------------------------------------------------------
+# HONEYPOT
+#--------------------------------------------------------------------
+
+# honeypot.hidden = 'true'
+# honeypot.label = 'Fill This Field'
+# honeypot.name = 'honeypot'
+# honeypot.template = '<label>{label}</label><input type="text" name="{name}" value=""/>'
+# honeypot.container = '<div style="display:none">{template}</div>'

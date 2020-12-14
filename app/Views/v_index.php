@@ -14,7 +14,7 @@
     <style>
     .li-style {
         list-style-type: none;
-        padding: 0.1rem 0rem 0.5rem 5rem;
+        padding: 0.1rem 0rem 0.5rem 4rem;
         margin-bottom: 1rem;
         position: relative;
     }
@@ -24,8 +24,8 @@
         position: absolute;
         top: 15px;
         left: -25px;
-        width: 90px;
-        height: 90px;
+        width: 71px;
+        height: 71px;
         background-repeat: no-repeat;
     }
 
@@ -141,8 +141,8 @@
                     </li>
                 </ul>
                 <ul>
-                    <li><h3>107-108成果共輔導學生357人次</h3></li>
-                    <li><h3>109年累計輔導學生共585人次!</h3></li>
+                    <li><h3 style="font-size: 26px;">107-108成果共輔導學生357人次</h3></li>
+                    <li><h3 style="font-size: 26px;">109年累計輔導學生共585人次!</h3></li>
                 </ul>
             </article>
 
