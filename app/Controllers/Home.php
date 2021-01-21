@@ -40,6 +40,8 @@ class Home extends BaseController {
         $tl_receipt_title = isset($_POST["tl_receipt_title"]) ? $_POST["tl_receipt_title"] : "" ;
         $tl_std_id = isset($_POST["tl_std_id"]) ? $_POST["tl_std_id"] : "" ;
         $tl_is_show = isset($_POST["tl_is_show"]) ? $_POST["tl_is_show"] : 0 ;
+
+        $tl_is_Credit = isset($_POST["Credit"]) ? $_POST["Credit"] : 0 ;
         
         //參數檢查避免傳送至綠界出錯
         if(!is_numeric($money) || !($money >= 100 &&  $money <= 100000)) {
@@ -89,11 +91,12 @@ class Home extends BaseController {
             "tl_receipt_title" => $tl_receipt_title,
             "tl_std_id" => $tl_std_id,
             "tl_is_show" => $tl_is_show,
+            "tl_is_Credit" => $tl_is_Credit
         );
         //將申請付款的資料寫入資料庫
         $TransactionList = model('App\Models\TransactionList', true);
         $TransactionList->setValue($data);
-        $TransactionList->update_table();
+        //$TransactionList->update_table();
         //準備處理綠界導向的參數
         $this->cashflow($p_id,$money,$OrderDate);
     }
@@ -111,9 +114,9 @@ class Home extends BaseController {
             $obj = new ECPay();
             #商店參數
             $obj->ServiceURL  = $_ENV["ServiceURL"] ;       //服務位置
-            $obj->HashKey     = $_ENV["HashKey"] ;          //測試用Hashkey，請自行帶入ECPay提供的HashKey
-            $obj->HashIV      = $_ENV["HashIV"] ;           //測試用HashIV，請自行帶入ECPay提供的HashIV
-            $obj->MerchantID  = $_ENV["MerchantID"] ;       //測試用MerchantID，請自行帶入ECPay提供的MerchantID
+            $obj->HashKey     = $_ENV["HashKey"] ;          //Hashkey，請自行帶入ECPay提供的HashKey
+            $obj->HashIV      = $_ENV["HashIV"] ;           //HashIV，請自行帶入ECPay提供的HashIV
+            $obj->MerchantID  = $_ENV["MerchantID"] ;       //MerchantID，請自行帶入ECPay提供的MerchantID
             $obj->EncryptType = $_ENV["EncryptType"] ;      //CheckMacValue加密類型，請固定填入1，使用SHA256加密
 
             #基本參數(請依系統規劃自行調整)
@@ -122,22 +125,31 @@ class Home extends BaseController {
             $obj->Send['MerchantTradeDate'] = $OrderDate ;                //交易時間
             $obj->Send['TotalAmount']       = $Money ;                    //交易金額
             $obj->Send['TradeDesc']         = urlencode("助學捐款") ;      //交易描述
-            $obj->Send['ChoosePayment']     = \ECPay_PaymentMethod::ALL ; //付款方式:全功能
+            //$obj->Send['ChoosePayment']     = \ECPay_PaymentMethod::ALL ; //付款方式:全功能
+            $obj->Send['ChoosePayment'] = \ECPay_PaymentMethod::Credit ;
             $obj->Send['ClientBackURL']     = $_ENV['ClientBackURL'] ;    //返回主首頁
             //$obj->Send['OrderResultURL']    = $_ENV['OrderResultURL'];    //返回自訂頁面
             $obj->Send['NeedExtraPaidInfo'] = 'Y';                        //額外的付款資訊
-                           
+                
             //訂單的商品資料
             array_push($obj->Send['Items'], 
-                array('Name' => "捐贈金額", 
-                'Price' => (int)$Money,
-                'Currency' => "元", 
-                'Quantity' => (int) "1", 
-                'URL' => "dedwed"
+                array(
+                    'Name' => "捐贈金額", 
+                    'Price' => (int)$Money,
+                    'Currency' => "元", 
+                    'Quantity' => (int) "1", 
+                    'URL' => "dedwed"
             ));
 
-            $obj->CheckOut(); //產生訂單(auto submit至ECPay)
-            
+            //定期定額 
+            if(true){
+                $obj->Send['PeriodAmount']  = (int)$Money ; //交易金額
+                $obj->Send['PeriodType']    = "M" ;         //天數 D M Y
+                $obj->Send['Frequency']     = 1 ;           //執行頻率
+                $obj->Send['ExecTimes']     = 12 ;          //執行次數
+            }
+            $obj->CheckOut(); //產生訂單(auto submit至ECPay)    
+               
         } catch (Exception $e) {
             echo $e->getMessage();
         } 
