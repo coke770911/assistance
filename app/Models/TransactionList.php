@@ -106,7 +106,8 @@ class TransactionList extends Model {
             [tl_modtfy_time],
             [tl_receipt_title] ,
             [tl_std_id] ,
-            [tl_is_show] ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            [tl_is_show] ,
+            [tl_is_Credit]) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
             $data = array(
                 $this->tl_pid ,
@@ -123,7 +124,8 @@ class TransactionList extends Model {
                 $this->tl_modtfy_time ,
                 $this->tl_receipt_title ,
                 $this->tl_std_id ,
-                $this->tl_is_show
+                $this->tl_is_show,
+                $this->tl_is_Credit
             );
 
             $this->db->srv_query($sql,$data);
