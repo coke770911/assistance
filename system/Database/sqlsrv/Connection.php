@@ -114,8 +114,6 @@ class Connection extends BaseConnection implements ConnectionInterface {
         }  
     }
 
-    
-
     /**
      * process SQL Server datatime format object to array
      */
