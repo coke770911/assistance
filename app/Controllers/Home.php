@@ -5,7 +5,7 @@ use App\Libraries\Ecpay;
 
 class Home extends BaseController {
 
- 
+
     public function index()
     {   
         $city_data = model('App\Models\RefData', true);
@@ -26,79 +26,61 @@ class Home extends BaseController {
         //訂單編號與訂單時間
         $p_id = "OIT".time().rand(10001,20000);
         $OrderDate = date('Y/m/d H:i:s');
+        $money = 0;
 
-        $money = isset($_POST["money"]) ? $_POST["money"] : 0 ;
-        $receipt = isset($_POST["tl_is_receipt"]) ? $_POST["tl_is_receipt"] : "" ;
-        $name = isset($_POST["name"]) ? $_POST["name"] : "" ;
-        $tel = isset($_POST["tel"]) ? $_POST["tel"] : "" ;
-        $email = isset($_POST["email"]) ? $_POST["email"] : "" ;
-        $message = isset($_POST["message"]) ? $_POST["message"] : "" ;
-        $city = isset($_POST["city"]) ? $_POST["city"] : "" ;
-        $city_area = isset($_POST["city_area"]) ? $_POST["city_area"] : "" ;
-        $address = isset($_POST["address"]) ? $_POST["address"] : "" ;
-
-        $tl_receipt_title = isset($_POST["tl_receipt_title"]) ? $_POST["tl_receipt_title"] : "" ;
-        $tl_std_id = isset($_POST["tl_std_id"]) ? $_POST["tl_std_id"] : "" ;
-        $tl_is_show = isset($_POST["tl_is_show"]) ? $_POST["tl_is_show"] : 0 ;
-
-        $tl_is_Credit = isset($_POST["Credit"]) ? $_POST["Credit"] : 0 ;
+        //定期定額模式確認
+        if($_POST["sel_mode"] === '0') {
+            $money = $_POST["money"];
+        } else {
+            $money = $_POST["Credit_money"];
+        }
         
-        //參數檢查避免傳送至綠界出錯
-        if(!is_numeric($money) || !($money >= 100 &&  $money <= 100000)) {
-            die("捐款金額一百元至十萬元新台幣整。");
-        }
+        //收據資料確認
+        if($_POST["is_receipt"] === '1') {
+            if($_POST['t_receipt_title'] == '') {
+                die("請輸入收據抬頭。");
+            }
 
-        if(strlen($name) > 50) {
-            die("捐款人姓名輸入字元過多。");
-        }
+            if($_POST['t_id_number'] == '') {
+                die("請輸入身分證字號或公司統編。");
+            }
 
-        if(strlen($tel) > 50) {
-            die("聯絡電話輸入字元過多。");
-        }
+            if($_POST['t_city'] == '0') {
+                die("請選擇收據縣市。");
+            }
 
-        if(strlen($email) > 50) {
-            die("Email輸入字元過多。");
-        }
-
-        if(strlen($message) > 450) {
-            die("想說的話輸入字元過多。");
-        }
-
-        if(strlen($tl_receipt_title) > 150) {
-            die("收據抬頭輸入名稱過長。");
-        }
-
-        if(strlen($tl_std_id) > 20) {
-            die("學號字元輸入過長。");
+            if($_POST['t_address'] !== '') {
+                die("請輸入收據地址。");
+            }
         }
 
         echo "將為您導向綠界金流平台！...";
-
+        //$_ENV["CI_ENVIRONMENT"] ;
         $data = array(
-            "tl_id" => 0,
-            "tl_pid" => $p_id,
-            "tl_money" => $money,
-            "tl_is_receipt" => $receipt,
-            "tl_name" => $name,
-            "tl_email" => $email,
-            "tl_tel" => $tel,
-            "tl_message" => $message,
-            "tl_city" => $city,
-            "tl_city_area" => $city_area,
-            "tl_address" => $address,
-            "tl_create_time" => $OrderDate,
-            "tl_modtfy_time" => $OrderDate,
-            "tl_receipt_title" => $tl_receipt_title,
-            "tl_std_id" => $tl_std_id,
-            "tl_is_show" => $tl_is_show,
-            "tl_is_Credit" => $tl_is_Credit
+            "t_Orderid" => $p_id,
+            "t_sel_mode" => $_POST["sel_mode"],
+            "t_money" => $money,
+            "t_Credit_money" => $money,
+            "t_is_receipt" => $_POST["is_receipt"],
+            "t_receipt_title" => $_POST["receipt_title"],
+            "t_id_number" => $_POST["id_number"],
+            "t_city" => $_POST["city"],
+            "t_address" => $_POST["address"],
+            "t_name" => $_POST["name"],
+            "t_tel" => $_POST["tel"],
+            "t_email" => $_POST["email"],
+            "t_stdno" => $_POST["stdno"],
+            "t_is_show" => $_POST["is_show"],
+            "t_is_test_mode" => $_ENV["CI_ENVIRONMENT"] === 'production' ? 0 : 1 ,
         );
+        print_r($data);
         //將申請付款的資料寫入資料庫
-        $TransactionList = model('App\Models\TransactionList', true);
+        $TransactionList = model('App\Models\Transaction', true);
         $TransactionList->setValue($data);
         $TransactionList->update_table();
         //準備處理綠界導向的參數
-        $this->cashflow($p_id,$money,$OrderDate,$tl_is_Credit,$tl_is_Credit);
+        $this->cashflow($p_id,$money,$OrderDate,$_POST["sel_mode"]);
+        print_r($TransactionList);
     }
 
     /**
@@ -140,13 +122,13 @@ class Home extends BaseController {
                     'URL' => "dedwed"
             ));
 
-            //定期定額 
-            if($is_Credit){
+            //定期定額
+            if($is_Credit == '1'){
                 $obj->Send['ChoosePayment'] = \ECPay_PaymentMethod::Credit ;
                 $obj->SendExtend['PeriodAmount']  = (int)$Money ; //交易金額
                 $obj->SendExtend['PeriodType']    = "M" ;         //天數 D M Y
                 $obj->SendExtend['Frequency']     = 1 ;           //執行頻率
-                $obj->SendExtend['ExecTimes']     = 24 ;          //執行次數
+                $obj->SendExtend['ExecTimes']     = 12 ;          //執行次數
             }
             $obj->CheckOut(); //產生訂單(auto submit至ECPay) 
         } catch (Exception $e) {

@@ -49,7 +49,7 @@ class TransactionReturn extends Model
                 $this->tr_content
             );
             $this->db->srv_query($sql,$data);
-            return $this->db->insertID();
+            //return $this->db->insertID();
         } else {
             /*
             $sql = "UPDATE [dbo].[TransactionReturn]

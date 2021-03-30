@@ -1,75 +1,16 @@
 <!DOCTYPE HTML>
 <html>
-
 <head>
     <title>完善就學協助機制 亞東技術學院</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link rel="stylesheet" href="assets/css/main.css" />
-    <style>
-    .li-style {
-        list-style-type: none;
-        padding: 0.1rem 0rem 0.5rem 4rem;
-        margin-bottom: 1rem;
-        position: relative;
-    }
-
-    .li-style:before {
-        content: "";
-        position: absolute;
-        top: 15px;
-        left: -25px;
-        width: 71px;
-        height: 71px;
-        background-repeat: no-repeat;
-    }
-
-    .intro:nth-of-type(1):before {
-        background: url("images/side-01.png");
-    }
-
-    .intro:nth-of-type(2):before {
-        background: url("images/side-02.png");
-    }
-
-    .intro:nth-of-type(3):before {
-        background: url("images/side-03.png");
-    }
-
-    .Results:nth-of-type(1):before {
-        background: url("images/side-06.png");
-    }
-
-    .Results:nth-of-type(2):before {
-        background: url("images/side-07.png");
-    }
-
-    .formHide {
-        display: none;
-    }
-
-    .error {
-        color: red;
-        font-weight: bold;
-    }
-
-    #footer .copyright {
-        text-transform: none;
-    }
-
-    .fontColor {
-        color: #E3007F;
-    }
-
-    body {
-        background: #2d1e3c;
-    }
-    </style>
+    <link rel="stylesheet" href="css/base.css" />
+    
     <noscript>
         <link rel="stylesheet" href="assets/css/noscript.css" />
     </noscript>
 </head>
-
 <body class="is-preload">
     <!-- Wrapper -->
     <div id="wrapper">
@@ -161,88 +102,103 @@
                 <form id="form" name="dataform" action="/Home/cashcheck" method="post">
                     <div class=" fields">
                         <div class="field half">
-                            <input type="radio" id="receipt_no" name="tl_is_receipt" value="0" checked>
-                            <label for="receipt_no">不索取捐款收據</label>
+                            <input type="radio" id="selGeneral" name="sel_mode" value="0" onchange="selMode(this)">
+                            <label for="selGeneral">一般捐款方式</label>
+                            <section>
+                                <ul>
+                                    <li>信用卡</li>
+                                    <li>網路ATM</li>
+                                    <li>ATM櫃員機</li>
+                                    <li>超商條碼</li>
+                                    <li>超商代碼</li>
+                                </ul>
+                            </section>
                         </div>
                         <div class="field half">
-                            <input type="radio" id="receipt_yes" name="tl_is_receipt" value="1">
+                            <input type="radio" id="selCredit" name="sel_mode" value="1" onchange="selMode(this)">
+                            <label for="selCredit">信用卡定期定額</label>
+                            <section>
+                                <ul>
+                                    <li>10K專案850元/月</li>
+                                    <li>20K專案1700元/月</li>
+                                    <li>30K專案2500元/月</li>
+                                    <li>50K專案4200元/月</li>
+                                    <li>100K專案8400元/月</li>
+                                </ul>
+                            </section>
+                        </div>
+                        <div class="field GeneralView">
+                            <label for="money">捐款金額</label>
+                            <input type="number" name="money" id="money" placeholder="輸入金額" maxlength="6"/>
+                        </div>
+                        <div class="field CreditView">
+                            <label for="Credit_money">選擇信用卡定期定額專案</label>
+                            <select name="Credit_money" id="Credit_money">
+                                <option value="">-</option>
+                                <option value="850">10K專案850元/月</option>
+                                <option value="1700">20K專案1700元/月</option>
+                                <option value="2500">30K專案2500元/月</option>
+                                <option value="4200">50K專案4200元/月</option>
+                                <option value="8400">100K專案8400元/月</option>
+                            </select>
+                            <label>如要終止定期定額捐款，請來電本校承辦人員。</label>
+                        </div>
+                    </div>
+                    <div class="fields basedataform">
+                        <div class="field">
+                            <input type="radio" id="receipt_no" name="is_receipt" value="0" checked>
+                            <label for="receipt_no">不索取捐款收據</label>
+                            <input type="radio" id="receipt_yes" name="is_receipt" value="1">
                             <label for="receipt_yes">索取捐款收據</label>
                         </div>
-                        <div class="field half">
-                            <label for="money">捐款金額</label>
-                            <input type="number" name="money" id="money" placeholder="輸入金額" />
+                        <div class="field formHide">
+                            <label for="tl_receipt_title">*收據抬頭(捐款人姓名/公司名稱)</label>
+                            <input type="text" name="receipt_title" id="tl_receipt_title" placeholder="捐款人姓名/公司名稱" maxlength="50" />
                         </div>
-                        <div class="field half"></div>
-                        <div class="field half">
-                            <input type="checkbox" id="Credit_yes" name="Credit" value="1">
-                            <label for="Credit_yes">使用信用卡定期定額捐款</label>
+                        <div class="field formHide">
+                            <label for="tl_id_number">*身分證字號/公司統編</label>
+                            <input type="text" name="id_number" id="id_number" placeholder="身分證字號/公司統編" maxlength="20" />
                         </div>
-                        <div class="field half"></div>
-                        <div class="field half" style="display: none;">
-                            <label for="city">縣市</label>
-                            <select name="city" id="city" onchange="selArea(this)">
+                        <div class="field formHide">
+                            <label for="city">*縣市</label>
+                            <select name="city" id="city">
                                 <option value="0">-</option>
                                 <?php foreach(esc($City) as $val) { ?>
                                 <option value="<?= $val['city_code']; ?>"><?= $val['city_name']; ?></option>
                                 <?php } ?>
                             </select>
                         </div>
-                        <div class="field half" style="display: none;">
-                            <label for="city_area">市區</label>
-                            <select name="city_area" id="city_area">
-                                <option value="0">-</option>
-                                <?php foreach(esc($CityArea) as $val) { ?>
-                                <option class="CityArea <?= "city".$val['city_parent_code']; ?>"
-                                    value="<?= $val['city_code']; ?>"><?= $val['city_name']; ?></option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                        <div class="field half formHide">
-                            <label for="tl_receipt_title">收據抬頭</label>
-                            <input type="text" name="tl_receipt_title" id="tl_receipt_title" placeholder="收據抬頭" />
-                        </div>
                         <div class="field formHide">
-                            <label for="address">收據地址</label>
-                            <input type="text" name="address" id="address" placeholder="收據地址" />
+                            <label for="address">*收據地址</label>
+                            <input type="text" name="address" id="address" placeholder="收據地址" maxlength="50"/>
+                            <label>若要索取捐款收據，請確實填寫以上資訊*為必填項目。</label>
                         </div>
-                        <div class="field half">
-                            <label for="name">捐款人姓名</label>
-                            <input type="text" name="name" id="name" placeholder="您的大名" />
-                        </div>
-                        <div class="field half"></div>
-                        <div class="field half">
-                            <label for="tel">連絡電話</label>
-                            <input type="text" name="tel" id="tel" placeholder="連絡電話" />
-                        </div>
-                        <div class="field half"></div>
-                        <div class="field half">
-                            <label for="email">電子信箱</label>
-                            <input type="email" name="email" id="email" placeholder="電子信箱" />
-                        </div>
-                        <div class="field half"></div>
-                        <div class="field half">
-                            <label for="stdId">您的學號(非校友免填寫)</label>
-                            <input type="text" name="tl_std_id" id="stdId" placeholder="學號" />
-                        </div>
-                        <div class="field half"></div>
                         <div class="field">
-                            <label>是否同意公開您的捐款紀錄於捐款名冊上</label>
+                            <label for="name">*捐款人姓名</label>
+                            <input type="text" name="name" id="name" placeholder="您的大名" maxlength="20" />
                         </div>
-                        <div class="field half">
-                            <input type="radio" id="show_list_no" name="tl_is_show" value="0" checked>
+                        <div class="field">
+                            <label for="tel">*連絡電話</label>
+                            <input type="text" name="tel" id="tel" placeholder="連絡電話" maxlength="50" />
+                        </div>
+                        <div class="field">
+                            <label for="email">*電子信箱</label>
+                            <input type="email" name="email" id="email" placeholder="電子信箱" maxlength="50" />
+                        </div>
+                        <div class="field">
+                            <label for="stdno">您的學號(非校友免填寫)</label>
+                            <input type="text" name="stdno" id="stdno" placeholder="學號" maxlength="20" />
+                        </div>
+                        <div class="field">
+                            <h4>是否同意公開您的捐款紀錄於捐款名冊上</h4>
+                            <input type="radio" id="show_list_no" name="is_show" value="0" checked>
                             <label for="show_list_no">不同意</label>
-                        </div>
-                        <div class="field half">
-                            <input type="radio" id="show_list_yes" name="tl_is_show" value="1">
+                            <input type="radio" id="show_list_yes" name="is_show" value="1">
                             <label for="show_list_yes">同意</label>
                         </div>
-                        <div class="field" style="display: none;">
-                            <label for="message">想說的話</label>
-                            <textarea name="message" id="message" placeholder="Message" rows="4"></textarea>
-                        </div>
                     </div>
-                    <ul class="actions">
-                        <li><input type="submit" value="送出資料" class="button primary" /></li>
+                    <ul class="actions basedataform">
+                        <li><input type="submit" value="送出資料" class="primary" /></li>
                     </ul>
                 </form>
             </article>
@@ -262,8 +218,11 @@
     <script src="assets/js/jquery.validate.min.js"></script>
     <script>
     $(function() {
+        /* init */
         $('.CityArea').hide();
-
+        $('.GeneralView').hide();
+        $('.CreditView').hide();
+        $('.basedataform').hide();
         $('#form').validate({
             onkeyup: function(element, event) {
                 //去除左側空白
@@ -316,22 +275,27 @@
                 form.submit();
             }
         });
-
     })
 
-    var selArea = function(e) {
-        $('.CityArea').hide();
-        document.getElementById('city_area').selectedIndex = 0
-        $(".city" + e.value).show();
-    }
-
-    $('body').on('change', 'input[name="tl_is_receipt"]', function() {
+    $('body').on('change', 'input[name="is_receipt"]', function() {
         if ($(this).val() == '1') {
             $('.formHide').show()
         } else {
             $('.formHide').hide()
         }
     })
+
+    var selMode = function(e) {
+        if(e.value == 0) {
+            $('.basedataform').show();
+            $('.CreditView').hide();
+            $('.GeneralView').show();
+        } else {
+            $('.basedataform').show();
+            $('.GeneralView').hide();
+            $('.CreditView').show();
+        }
+    }
     </script>
 </body>
 

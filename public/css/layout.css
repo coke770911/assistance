@@ -1,3 +1,7 @@
+/**
+前台樣式
+*/
+
 @media (max-width: 991px) {
     .abs {
         position: absolute;
@@ -5,4 +9,4 @@
         left: 0;
         text-align: center;
     }
-}    
+}
